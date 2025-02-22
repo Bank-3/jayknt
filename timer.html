@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Wait Timer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #E21D28, #202F77);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .thank-you-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+        p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .timer {
+            font-weight: bold;
+            font-size: 48px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 20px;
+            display: inline-block;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="thank-you-container">
+    <h1>Thank You!</h1>
+    <p>Your submission has been received.</p>
+    <p>Please Wait For Proccessing...:</p>
+    <div id="timer" class="timer">5:00</div>
+</div>
+
+<script>
+    let countdown = 300; // 5 minutes in seconds
+
+    const timerElement = document.getElementById('timer');
+
+    const updateTimer = () => {
+        const minutes = Math.floor(countdown / 60);
+        const seconds = countdown % 60;
+        timerElement.innerText = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        
+        if (countdown > 0) {
+            countdown--;
+        } else {
+            clearInterval(interval);
+            window.location.href = 'timer.html'; // Redirect to another page
+        }
+    };
+
+    const interval = setInterval(updateTimer, 1000);
+</script>
+
+</body>
+</html>

